@@ -33,10 +33,13 @@ class Block(Basic):
     def draw(self, surface) -> None:
         pygame.draw.rect(surface, self.color, self.rect)
     
-    def collide(self):
+    def collide(self, ball):
         # ============================================
         # TODO: Implement an event when block collides with a ball
-        pass
+        for block in self:
+            if ball.rect.colliderect(block.rect):
+                block.alive = False
+                self.remove(block)
 
 
 class Paddle(Basic):
@@ -68,7 +71,14 @@ class Ball(Basic):
     def collide_block(self, blocks: list):
         # ============================================
         # TODO: Implement an event when the ball hits a block
-        pass
+        for block in blocks:
+            if self.rect.colliderect(block.rect):
+                Block.collide(blocks, self)
+                if block.rect.bottom >= self.rect.top or block.rect.top <= self.rect.bottom:
+                    if block.rect.left < self.rect.right or block.rect.right > self.rect.left:
+                        self.dir = 360 - self.dir + random.randint(-5, 5)
+                else:
+                    self.dir = 180 - self.dir + random.randint(-5, 5)
 
     def collide_paddle(self, paddle: Paddle) -> None:
         if self.rect.colliderect(paddle.rect):
@@ -77,12 +87,17 @@ class Ball(Basic):
     def hit_wall(self):
         # ============================================
         # TODO: Implement a service that bounces off when the ball hits the wall
-        pass
         # 좌우 벽 충돌
-        
+        if self.rect.left < 0 or self.rect.right > config.display_dimension[0]:
+            self.dir = 180 - self.dir + random.randint(-5, 5)
         # 상단 벽 충돌
+        if self.rect.top < 0:
+            self.dir = self.dir = 360 - self.dir + random.randint(-5, 5)
     
     def alive(self):
         # ============================================
         # TODO: Implement a service that returns whether the ball is alive or not
-        pass
+        if self.rect.bottom > config.display_dimension[1]:
+            return False
+        else:
+            return True

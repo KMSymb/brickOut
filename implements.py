@@ -68,7 +68,14 @@ class Ball(Basic):
     def collide_block(self, blocks: list):
         # ============================================
         # TODO: Implement an event when the ball hits a block
-        pass
+        for block in blocks:
+            if self.rect.colliderect(block.rect):
+                Block.collide(blocks, self)
+                if block.rect.bottom >= self.rect.top or block.rect.top <= self.rect.bottom:
+                    if block.rect.left < self.rect.right or block.rect.right > self.rect.left:
+                        self.dir = 360 - self.dir + random.randint(-5, 5)
+                else:
+                    self.dir = 180 - self.dir + random.randint(-5, 5)
 
     def collide_paddle(self, paddle: Paddle) -> None:
         if self.rect.colliderect(paddle.rect):

@@ -74,8 +74,12 @@ def tick():
     for item in ITEMS[:]:
         item.move()
         if item.collide_paddle(paddle):
-            if item.effect == "red": #빨간색일때
-                pass
+            if item.effect == "red":  # 빨간색 아이템일 때
+                new_ball = Ball(pos=(paddle.rect.centerx, paddle.rect.top - 20))  # 패들 바로 위
+                existing_directions = [ball.dir for ball in BALLS]
+                while new_ball.dir in existing_directions:
+                    new_ball.dir = random.randint(30, 150)  # 기존 공과 다른 방향
+                BALLS.append(new_ball)
             elif item.effect == "blue": #파란색일때
                 pass
             ITEMS.remove(item)

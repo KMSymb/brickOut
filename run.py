@@ -1,3 +1,4 @@
+import random
 import sys
 from implements import Basic, Block, Paddle, Ball
 import config
@@ -63,11 +64,23 @@ def tick():
             ball.rect.centerx = paddle.rect.centerx
             ball.rect.bottom = paddle.rect.top
 
-        ball.collide_block(BLOCKS)
+        ball.collide_block(BLOCKS,ITEMS)
         ball.collide_paddle(paddle)
         ball.hit_wall()
-        if ball.alive() == False:
+
+        if not ball.alive():
             BALLS.remove(ball)
+
+    for item in ITEMS[:]:
+        item.move()
+        if item.collide_paddle(paddle):
+            if item.effect == "red": #빨간색일때
+                pass
+            elif item.effect == "blue": #파란색일때
+                pass
+            ITEMS.remove(item)
+        elif item.rect.top > config.display_dimension[1]: #바닥으로 내려가면 사라지게
+            ITEMS.remove(item)
 
 
 def main():
@@ -89,7 +102,14 @@ def main():
         paddle.draw(surface)
 
         for block in BLOCKS:
-            block.draw(surface)
+            if block.alive:  # 블록이 살아 있는 경우만 화면에 그림
+                block.draw(surface)
+
+        for ball in BALLS: #볼그리기기
+            ball.draw(surface)
+
+        for item in ITEMS: #아이템그리기
+            item.draw(surface)
 
         cur_score = config.num_blocks[0] * config.num_blocks[1] - len(BLOCKS)
 
@@ -109,13 +129,6 @@ def main():
                 surface.blit(mess_over, (200, 300))
         elif all(block.alive == False for block in BLOCKS):
             surface.blit(mess_clear, (200, 400))
-        else:
-            for ball in BALLS:
-                if start == True:
-                    ball.move()
-                ball.draw(surface)
-            for block in BLOCKS:
-                block.draw(surface)
 
         pygame.display.update()
         fps_clock.tick(config.fps)

@@ -47,7 +47,7 @@ class Block(Basic):
         if ball.rect.colliderect(self.rect) and self.alive:
             self.alive = False
             # 20% 확률로 아이템 생성
-            if random.random() < 1.0:
+            if random.random() < 0.2:
                 item_color = (255, 0, 0) if random.random() < 0.5 else (0, 0, 255)
                 items.append(Item(item_color, (self.rect.centerx, self.rect.centery)))
 

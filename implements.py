@@ -23,6 +23,16 @@ class Basic:
         self.rect.move_ip(dx, dy)
         self.center = (self.rect.centerx, self.rect.centery)
 
+class Item(Basic):
+    def __init__(self, color: tuple, pos: tuple):
+        super().__init__(color, speed=3, pos=pos, size=(20, 20))  # 아이템 크기
+        self.effect = "red" if color == config.red_color else "blue" #config에서 색깔 가져오기
+
+    def draw(self, surface):
+        pygame.draw.ellipse(surface, self.color, self.rect)
+
+    def collide_paddle(self, paddle):
+        return self.rect.colliderect(paddle.rect)
 
 class Block(Basic):
     def __init__(self, color: tuple, pos: tuple = (0,0), alive = True):
@@ -33,13 +43,13 @@ class Block(Basic):
     def draw(self, surface) -> None:
         pygame.draw.rect(surface, self.color, self.rect)
     
-    def collide(self, ball):
-        # ============================================
-        # TODO: Implement an event when block collides with a ball
-        for block in self:
-            if ball.rect.colliderect(block.rect):
-                block.alive = False
-                self.remove(block)
+    def collide(self, ball, items):
+        if ball.rect.colliderect(self.rect) and self.alive:
+            self.alive = False
+            # 20% 확률로 아이템 생성
+            if random.random() < 0.2:
+                item_color = config.red_color if random.random() < 0.5 else config.blue_color
+                items.append(Item(item_color, (self.rect.centerx, self.rect.centery)))
 
 
 class Paddle(Basic):
@@ -68,15 +78,12 @@ class Ball(Basic):
     def draw(self, surface):
         pygame.draw.ellipse(surface, self.color, self.rect)
 
-    def collide_block(self, blocks: list):
-        # ============================================
-        # TODO: Implement an event when the ball hits a block
+    def collide_block(self, blocks: list, items: list):
         for block in blocks:
-            if self.rect.colliderect(block.rect):
-                Block.collide(blocks, self)
+            if block.alive and self.rect.colliderect(block.rect):
+                block.collide(self, items)
                 if block.rect.bottom >= self.rect.top or block.rect.top <= self.rect.bottom:
-                    if block.rect.left < self.rect.right or block.rect.right > self.rect.left:
-                        self.dir = 360 - self.dir + random.randint(-5, 5)
+                    self.dir = 360 - self.dir + random.randint(-5, 5)
                 else:
                     self.dir = 180 - self.dir + random.randint(-5, 5)
 
@@ -92,7 +99,7 @@ class Ball(Basic):
             self.dir = 180 - self.dir + random.randint(-5, 5)
         # 상단 벽 충돌
         if self.rect.top < 0:
-            self.dir = self.dir = 360 - self.dir + random.randint(-5, 5)
+            self.dir = 360 - self.dir + random.randint(-5, 5)
     
     def alive(self):
         # ============================================

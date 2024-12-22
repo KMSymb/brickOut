@@ -11,7 +11,7 @@ score_pos = (10, 10)
 life_pos = (450, 10)
 
 # Display setting
-fps = 30
+fps = 45 #속도상승
 wall_width = 10
 scoreboard_height = 50
 gameboard_height_coefficient = 3
@@ -58,3 +58,6 @@ collision_limit = len(colors) - 1
 
 # Total number of life.
 life = 3
+
+red_color = (255, 100, 100)  # 밝은 빨간색
+blue_color = (100, 100, 255)  # 밝은 파란색

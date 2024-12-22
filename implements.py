@@ -26,7 +26,11 @@ class Basic:
 class Item(Basic):
     def __init__(self, color: tuple, pos: tuple):
         super().__init__(color, speed=3, pos=pos, size=(20, 20))  # 아이템 크기
+<<<<<<< HEAD
+        self.effect = "red" if color == config.red_color else "blue"
+=======
         self.effect = "red" if color == config.red_color else "blue" #config에서 색깔 가져오기
+>>>>>>> 887a7cb9785516810791c20ca95b89c251653da5
 
     def draw(self, surface):
         pygame.draw.ellipse(surface, self.color, self.rect)

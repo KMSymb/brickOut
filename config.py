@@ -58,3 +58,6 @@ collision_limit = len(colors) - 1
 
 # Total number of life.
 life = 3
+
+red_color = (255, 100, 100)  # 밝은 빨간색
+blue_color = (100, 100, 255)  # 밝은 파란색

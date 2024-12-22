@@ -26,7 +26,7 @@ class Basic:
 class Item(Basic):
     def __init__(self, color: tuple, pos: tuple):
         super().__init__(color, speed=3, pos=pos, size=(20, 20))  # 아이템 크기
-        self.effect = "red" if color == (255, 0, 0) else "blue"
+        self.effect = "red" if color == config.red_color else "blue" #config에서 색깔 가져오기
 
     def draw(self, surface):
         pygame.draw.ellipse(surface, self.color, self.rect)
@@ -48,7 +48,7 @@ class Block(Basic):
             self.alive = False
             # 20% 확률로 아이템 생성
             if random.random() < 1.0:
-                item_color = (255, 0, 0) if random.random() < 0.5 else (0, 0, 255)
+                item_color = config.red_color if random.random() < 0.5 else config.blue_color
                 items.append(Item(item_color, (self.rect.centerx, self.rect.centery)))
 
 

@@ -11,7 +11,11 @@ score_pos = (10, 10)
 life_pos = (450, 10)
 
 # Display setting
+<<<<<<< HEAD
 fps = 25 #속도
+=======
+fps = 45 #속도상승
+>>>>>>> 887a7cb9785516810791c20ca95b89c251653da5
 wall_width = 10
 scoreboard_height = 50
 gameboard_height_coefficient = 3
